@@ -1,0 +1,75 @@
+key: "value"
+nested.key: "another value"
+
+map:
+    inline: {a: 1, b: 2}
+
+    block:
+        a: 1
+        b: 2
+
+    block.c: 3
+
+list:
+    inline: [1, 2, 3]
+
+    block.strings:
+        - "item 1"
+        - "item 2"
+
+    block.maps:
+        - label: "map 1"
+        - label: "map 2"
+
+    block.list-of-maps:
+        ---
+        list1.map1:
+            a: 1
+            b: 2
+        list1.map2:
+            c: 3
+            d: 4
+        ---
+        list2.map1:
+            a: 1
+            b: 2
+        ---
+
+    block.list-of-lists:
+        ---
+        - "list 1 item 1"
+        - "list 1 item 2"
+        ---
+        - "list 2 item 1"
+        ---
+
+string:
+    double: "line 1\nline 2\nline 3"
+
+    # One line, no escaping, literal slash
+    single: 'line 1\nline 1 still'
+
+    # Three lines, with escaping support.
+    fence.double.inline: """line 1\nLine 2\nline 3\n"""
+    fence.double.block:
+        """
+        line 1\nline \
+        2
+        line 3
+        """
+
+    # One line, no escaping, literal slash
+    fence.single.inline: '''line 1\nline 1 still'''
+    fence.single.block:
+        '''
+        line 1\n
+        line 2
+        '''
+
+numbers:
+    int: 123
+    float: 1.23
+    hex: 0x123
+    octal: 0o777
+    binary: 0b011
+    exponent: 1e-23

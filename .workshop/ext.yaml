@@ -1,0 +1,13 @@
+name: ext
+base: ubuntu@24.04
+sdks:
+  - name: node
+    channel: "24"
+actions:
+  build: |
+    npm ci
+    npx @vscode/vsce package
+  test: |
+    npm run test
+  test-ci: |
+    npm test

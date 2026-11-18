@@ -1,0 +1,68 @@
+# SYNTAX TEST "source.cnf" "keys, paths and maps"
+
+key: "value"
+# <--- meta.path.cnf support.type.property-name.cnf
+#  ^ meta.path.cnf punctuation.separator.key-value.cnf
+#    ^^^^^^^ string.quoted.double.cnf
+
+nested.key-1_x: 1
+# <------ support.type.property-name.cnf
+#     ^ punctuation.accessor.dot.cnf
+#      ^^^^^^^ support.type.property-name.cnf
+#             ^ punctuation.separator.key-value.cnf
+
+label."rm \"-rf".'a b': "unsafe"
+#    ^ punctuation.accessor.dot.cnf
+#     ^ string.quoted.double.cnf support.type.property-name.cnf punctuation.definition.string.begin.cnf
+#      ^^^ string.quoted.double.cnf support.type.property-name.cnf
+#         ^^ string.quoted.double.cnf support.type.property-name.cnf constant.character.escape.cnf
+#              ^ punctuation.definition.string.end.cnf
+#               ^ punctuation.accessor.dot.cnf
+#                ^^^^^ string.quoted.single.cnf support.type.property-name.cnf
+#                     ^ punctuation.separator.key-value.cnf
+#                       ^^^^^^^^ string.quoted.double.cnf - support.type.property-name.cnf
+
+true: true
+# <---- support.type.property-name.cnf
+#     ^^^^ constant.language.boolean.true.cnf
+
+123: 123
+# <--- support.type.property-name.cnf
+#    ^^^ constant.numeric.integer.decimal.cnf
+
+map:
+    block:
+#   ^^^^^ support.type.property-name.cnf
+#        ^ punctuation.separator.key-value.cnf
+        a: 1
+#       ^ support.type.property-name.cnf
+
+    inline: {a: 1, b."c d": [2], e: {}}
+#           ^ meta.map.cnf punctuation.definition.map.begin.cnf
+#            ^ meta.map.cnf meta.path.cnf support.type.property-name.cnf
+#             ^ meta.map.cnf meta.path.cnf punctuation.separator.key-value.cnf
+#               ^ meta.map.cnf constant.numeric.integer.decimal.cnf
+#                ^ meta.map.cnf punctuation.separator.map.cnf
+#                  ^ support.type.property-name.cnf
+#                   ^ punctuation.accessor.dot.cnf
+#                    ^^^^^ string.quoted.double.cnf support.type.property-name.cnf
+#                           ^^^ meta.map.cnf meta.list.cnf
+#                                ^ support.type.property-name.cnf
+#                                   ^ meta.map.cnf meta.map.cnf punctuation.definition.map.begin.cnf
+#                                    ^ meta.map.cnf meta.map.cnf punctuation.definition.map.end.cnf
+#                                     ^ meta.map.cnf punctuation.definition.map.end.cnf
+
+    empty: {} # comment
+#          ^^ meta.map.cnf
+#             ^^^^^^^^^ comment.line.number-sign.cnf - meta.map.cnf
+
+invalid:
+    spaced : 1
+#   ^^^^^^ invalid.illegal.cnf
+#          ^ invalid.illegal.cnf
+    word: value
+#         ^^^^^ invalid.illegal.cnf
+    unclosed: {a: 1
+#             ^^^^^ meta.map.cnf
+    next: 1
+#   ^^^^ support.type.property-name.cnf - meta.map.cnf

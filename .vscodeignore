@@ -1,0 +1,15 @@
+.vscode/**
+node_modules/**
+.github/**
+.workshop/**
+.workshop.lock
+.kb/**
+.direnv/**
+test/**
+examples/**
+.editorconfig
+.envrc
+.gitattributes
+.gitignore
+flake.lock
+flake.nix

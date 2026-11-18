@@ -1,0 +1,18 @@
+# SYNTAX TEST "source.cnf" "standalone and inline comments"
+
+# Standalone comment
+# <- comment.line.number-sign.cnf punctuation.definition.comment.cnf
+# ^^^^^^^^^^^^^^^^^^ comment.line.number-sign.cnf
+timeout: 30 # Inline comment
+#        ^^ constant.numeric.integer.decimal.cnf
+#           ^ comment.line.number-sign.cnf punctuation.definition.comment.cnf
+#            ^^^^^^^^^^^^^^^ comment.line.number-sign.cnf
+service: # opens a block
+#        ^^^^^^^^^^^^^^^ comment.line.number-sign.cnf
+    # key: "not a key"
+#   ^^^^^^^^^^^^^^^^^^ comment.line.number-sign.cnf - support.type.property-name.cnf string
+    enabled: true
+    list: [1, 2] # [not, a, list]
+#                ^^^^^^^^^^^^^^^^ comment.line.number-sign.cnf - meta.list.cnf
+    - "item" # comment
+#            ^^^^^^^^^ comment.line.number-sign.cnf

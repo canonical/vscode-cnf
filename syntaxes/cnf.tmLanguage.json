@@ -1,0 +1,287 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "cnf",
+  "scopeName": "source.cnf",
+  "fileTypes": ["cnf"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#double-fenced-block" },
+    { "include": "#single-fenced-block" },
+    { "include": "#list-fence" },
+    { "include": "#list-dash" },
+    { "include": "#path" },
+    { "include": "#value" },
+    { "include": "#illegal" }
+  ],
+  "repository": {
+    "comment": {
+      "comment": "Strings are matched before this rule gets a chance, so a # inside of them is safe.",
+      "name": "comment.line.number-sign.cnf",
+      "match": "(#).*$",
+      "captures": {
+        "1": { "name": "punctuation.definition.comment.cnf" }
+      }
+    },
+
+    "list-fence": {
+      "comment": "A list fence sits alone on its line.",
+      "match": "^[ \\t]*(---)[ \\t]*$",
+      "captures": {
+        "1": { "name": "punctuation.definition.list.fence.cnf" }
+      }
+    },
+
+    "list-dash": {
+      "comment": "A dash opens a list item only before a blank or the end of the line; anywhere else it spells a key or a number.",
+      "match": "^[ \\t]*(-)(?=[ \\t]|$)",
+      "captures": {
+        "1": { "name": "punctuation.definition.list.item.cnf" }
+      }
+    },
+
+    "path": {
+      "comment": "Keys joined by dots, up to the colon. Nothing may sit between the keys, the dots and the colon, so the lookahead tells a key from a value.",
+      "name": "meta.path.cnf",
+      "begin": "(?=(?:[A-Za-z0-9_-]+|\"(?:[^\"\\\\]|\\\\.)*\"|'[^']*')(?:\\.(?:[A-Za-z0-9_-]+|\"(?:[^\"\\\\]|\\\\.)*\"|'[^']*'))*:)",
+      "end": ":",
+      "endCaptures": {
+        "0": { "name": "punctuation.separator.key-value.cnf" }
+      },
+      "patterns": [
+        {
+          "name": "support.type.property-name.cnf",
+          "match": "[A-Za-z0-9_-]+"
+        },
+        {
+          "name": "punctuation.accessor.dot.cnf",
+          "match": "\\."
+        },
+        {
+          "name": "string.quoted.double.cnf support.type.property-name.cnf",
+          "begin": "\"",
+          "end": "\"",
+          "beginCaptures": {
+            "0": { "name": "punctuation.definition.string.begin.cnf" }
+          },
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.cnf" }
+          },
+          "patterns": [{ "include": "#escape" }]
+        },
+        {
+          "name": "string.quoted.single.cnf support.type.property-name.cnf",
+          "begin": "'",
+          "end": "'",
+          "beginCaptures": {
+            "0": { "name": "punctuation.definition.string.begin.cnf" }
+          },
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.cnf" }
+          }
+        }
+      ]
+    },
+
+    "value": {
+      "comment": "The inline forms. The fences come first: a quoted string would otherwise match their first two quotes.",
+      "patterns": [
+        { "include": "#double-fenced-inline" },
+        { "include": "#single-fenced-inline" },
+        { "include": "#double-quoted" },
+        { "include": "#single-quoted" },
+        { "include": "#number" },
+        { "include": "#constant" },
+        { "include": "#map" },
+        { "include": "#list" }
+      ]
+    },
+
+    "illegal": {
+      "comment": "Whatever is left where a value or a key was due: redundant leading zeros, unquoted words, misplaced colons.",
+      "name": "invalid.illegal.cnf",
+      "match": "[^\\s,\\[\\]{}'\"#]+"
+    },
+
+    "map": {
+      "comment": "Inline values never span lines, so an unclosed one ends with its line.",
+      "name": "meta.map.cnf",
+      "begin": "\\{",
+      "end": "(\\})|(?=$)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.map.begin.cnf" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.map.end.cnf" }
+      },
+      "patterns": [
+        { "include": "#path" },
+        {
+          "name": "punctuation.separator.map.cnf",
+          "match": ","
+        },
+        { "include": "#value" },
+        { "include": "#illegal" }
+      ]
+    },
+
+    "list": {
+      "name": "meta.list.cnf",
+      "begin": "\\[",
+      "end": "(\\])|(?=$)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.list.begin.cnf" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.list.end.cnf" }
+      },
+      "patterns": [
+        {
+          "name": "punctuation.separator.list.cnf",
+          "match": ","
+        },
+        { "include": "#value" },
+        { "include": "#illegal" }
+      ]
+    },
+
+    "number": {
+      "comment": "The lookahead keeps a number from matching the head of a longer word, such as the 0 of 066.",
+      "patterns": [
+        {
+          "name": "constant.numeric.integer.hexadecimal.cnf",
+          "match": "-?0x[0-9a-fA-F]+(?=[\\s,\\]}]|$)"
+        },
+        {
+          "name": "constant.numeric.integer.octal.cnf",
+          "match": "-?0o[0-7]+(?=[\\s,\\]}]|$)"
+        },
+        {
+          "name": "constant.numeric.integer.binary.cnf",
+          "match": "-?0b[01]+(?=[\\s,\\]}]|$)"
+        },
+        {
+          "name": "constant.numeric.float.cnf",
+          "match": "-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+(?:e[+-]?[0-9]+)?|e[+-]?[0-9]+)(?=[\\s,\\]}]|$)"
+        },
+        {
+          "name": "constant.numeric.integer.decimal.cnf",
+          "match": "-?(?:0|[1-9][0-9]*)(?=[\\s,\\]}]|$)"
+        }
+      ]
+    },
+
+    "constant": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.true.cnf",
+          "match": "true(?=[\\s,\\]}]|$)"
+        },
+        {
+          "name": "constant.language.boolean.false.cnf",
+          "match": "false(?=[\\s,\\]}]|$)"
+        },
+        {
+          "name": "constant.language.null.cnf",
+          "match": "null(?=[\\s,\\]}]|$)"
+        }
+      ]
+    },
+
+    "double-quoted": {
+      "name": "string.quoted.double.cnf",
+      "begin": "\"",
+      "end": "(\")|(?=$)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.cnf" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.string.end.cnf" }
+      },
+      "patterns": [{ "include": "#escape" }]
+    },
+
+    "single-quoted": {
+      "name": "string.quoted.single.cnf",
+      "begin": "'",
+      "end": "(')|(?=$)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.cnf" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.string.end.cnf" }
+      }
+    },
+
+    "double-fenced-inline": {
+      "comment": "The single-line fence: it closes at the first run of three quotes.",
+      "name": "string.quoted.triple.double.cnf",
+      "begin": "\"\"\"",
+      "end": "(\"\"\")|(?=$)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.cnf" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.string.end.cnf" }
+      },
+      "patterns": [{ "include": "#escape" }]
+    },
+
+    "single-fenced-inline": {
+      "name": "string.quoted.triple.single.cnf",
+      "begin": "'''",
+      "end": "(''')|(?=$)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.cnf" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.string.end.cnf" }
+      }
+    },
+
+    "double-fenced-block": {
+      "comment": "A fence alone on its line opens a block, which closes at the same fence behind the same prefix. A fence at any other prefix is content.",
+      "name": "string.quoted.triple.double.block.cnf",
+      "begin": "^([ \\t]*)(\"\"\")[ \\t]*$",
+      "end": "^\\1(\"\"\")[ \\t]*$",
+      "beginCaptures": {
+        "2": { "name": "punctuation.definition.string.begin.cnf" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.string.end.cnf" }
+      },
+      "patterns": [
+        {
+          "name": "constant.character.escape.newline.cnf",
+          "match": "\\\\$"
+        },
+        { "include": "#escape" }
+      ]
+    },
+
+    "single-fenced-block": {
+      "name": "string.quoted.triple.single.block.cnf",
+      "begin": "^([ \\t]*)(''')[ \\t]*$",
+      "end": "^\\1(''')[ \\t]*$",
+      "beginCaptures": {
+        "2": { "name": "punctuation.definition.string.begin.cnf" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.string.end.cnf" }
+      }
+    },
+
+    "escape": {
+      "patterns": [
+        {
+          "comment": "Both \\u spellings stay under U+10FFFF and exclude the surrogate range U+D800 to U+DFFF.",
+          "name": "constant.character.escape.cnf",
+          "match": "\\\\(?:[\"\\\\nrtbf]|x[0-9a-fA-F]{2}|u(?:[0-9a-cA-CefEF][0-9a-fA-F]{3}|[dD][0-7][0-9a-fA-F]{2})|u\\{(?:[0-9a-fA-F]{1,3}|0{0,2}(?:[0-9a-cA-CefEF][0-9a-fA-F]{3}|[dD][0-7][0-9a-fA-F]{2})|0?[1-9a-fA-F][0-9a-fA-F]{4}|10[0-9a-fA-F]{4})\\})"
+        },
+        {
+          "name": "invalid.illegal.unknown-escape.cnf",
+          "match": "\\\\(?:u\\{[0-9a-fA-F]*\\}|u[0-9a-fA-F]{4}|.)"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,55 @@
+# SYNTAX TEST "source.cnf" "inline, dashed and fenced lists"
+
+inline: [1, "two", [true, null], {a: 3}]
+#       ^ meta.list.cnf punctuation.definition.list.begin.cnf
+#        ^ meta.list.cnf constant.numeric.integer.decimal.cnf
+#         ^ meta.list.cnf punctuation.separator.list.cnf
+#           ^^^^^ meta.list.cnf string.quoted.double.cnf
+#                  ^ meta.list.cnf meta.list.cnf punctuation.definition.list.begin.cnf
+#                   ^^^^ constant.language.boolean.true.cnf
+#                         ^^^^ constant.language.null.cnf
+#                             ^ meta.list.cnf meta.list.cnf punctuation.definition.list.end.cnf
+#                                ^^^^^^ meta.list.cnf meta.map.cnf
+#                                 ^ support.type.property-name.cnf
+#                                      ^ meta.list.cnf punctuation.definition.list.end.cnf
+
+dashed:
+    - "item 1"
+#   ^ punctuation.definition.list.item.cnf
+#     ^^^^^^^^ string.quoted.double.cnf
+    - -1
+#   ^ punctuation.definition.list.item.cnf
+#     ^^ constant.numeric.integer.decimal.cnf
+    - label.x: "map 1" # comment
+#   ^ punctuation.definition.list.item.cnf
+#     ^^^^^ support.type.property-name.cnf
+#          ^ punctuation.accessor.dot.cnf
+#            ^ punctuation.separator.key-value.cnf
+#              ^^^^^^^ string.quoted.double.cnf
+#                      ^^^^^^^^^ comment.line.number-sign.cnf
+    -a: 1
+#   ^^ support.type.property-name.cnf - punctuation.definition.list.item.cnf
+    ---: 1
+#   ^^^ support.type.property-name.cnf - punctuation.definition.list.fence.cnf
+
+fenced:
+    ---
+#   ^^^ punctuation.definition.list.fence.cnf
+    list1.map1:
+#   ^^^^^ support.type.property-name.cnf
+        a: 1
+    ---
+#   ^^^ punctuation.definition.list.fence.cnf
+        ---
+#       ^^^ punctuation.definition.list.fence.cnf
+        - 1
+#       ^ punctuation.definition.list.item.cnf
+        ---
+    ---
+    "inline element"
+#   ^^^^^^^^^^^^^^^^ string.quoted.double.cnf
+    ---
+
+invalid:
+    --- 1
+#   ^^^ invalid.illegal.cnf

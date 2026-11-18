@@ -1,0 +1,43 @@
+# SYNTAX TEST "source.cnf" "numbers and constants"
+
+int: 123
+#    ^^^ constant.numeric.integer.decimal.cnf
+zero: 0
+#     ^ constant.numeric.integer.decimal.cnf
+negative: -42
+#         ^^^ constant.numeric.integer.decimal.cnf
+float: 1.23
+#      ^^^^ constant.numeric.float.cnf
+exponent: 1e-23
+#         ^^^^^ constant.numeric.float.cnf
+both: -0.5e+10
+#     ^^^^^^^^ constant.numeric.float.cnf
+hex: 0x12aF
+#    ^^^^^^ constant.numeric.integer.hexadecimal.cnf
+octal: 0o777
+#      ^^^^^ constant.numeric.integer.octal.cnf
+binary: 0b011
+#       ^^^^^ constant.numeric.integer.binary.cnf
+yes: true
+#    ^^^^ constant.language.boolean.true.cnf
+no: false
+#   ^^^^^ constant.language.boolean.false.cnf
+nothing: null # comment
+#        ^^^^ constant.language.null.cnf
+#             ^^^^^^^^^ comment.line.number-sign.cnf
+
+invalid:
+    leading-zero: 066
+#                 ^^^ invalid.illegal.cnf
+    octal: 0o78
+#          ^^^^ invalid.illegal.cnf
+    fraction: 1.
+#             ^^ invalid.illegal.cnf
+    exponent: 1E5
+#             ^^^ invalid.illegal.cnf
+    plus: +1
+#         ^^ invalid.illegal.cnf
+    word: truely
+#         ^^^^^^ invalid.illegal.cnf
+    case: True
+#         ^^^^ invalid.illegal.cnf

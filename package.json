@@ -1,0 +1,61 @@
+{
+  "name": "cnf",
+  "displayName": "cnf",
+  "description": "cnf language support for VS Code",
+  "publisher": "canonical",
+  "version": "0.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/canonical/vscode-cnf",
+  "bugs": {
+    "url": "https://github.com/canonical/vscode-cnf/issues"
+  },
+  "keywords": [
+    "cnf",
+    "configuration",
+    "syntax",
+    "grammar",
+    "textmate"
+  ],
+  "galleryBanner": {
+    "color": "#E95420",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/canonical/vscode-cnf.git"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "cnf",
+        "aliases": [
+          "cnf"
+        ],
+        "extensions": [
+          ".cnf"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "cnf",
+        "scopeName": "source.cnf",
+        "path": "./syntaxes/cnf.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "test": "vscode-tmgrammar-test \"test/*.cnf\""
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.9.2",
+    "vscode-tmgrammar-test": "^0.1.3"
+  }
+}

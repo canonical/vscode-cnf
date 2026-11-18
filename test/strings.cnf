@@ -1,0 +1,84 @@
+# SYNTAX TEST "source.cnf" "the four string families"
+
+double: "a # b\n\"c\""
+#       ^ string.quoted.double.cnf punctuation.definition.string.begin.cnf
+#        ^^^^^ string.quoted.double.cnf - comment
+#             ^^^^ string.quoted.double.cnf constant.character.escape.cnf
+#                  ^^ constant.character.escape.cnf
+#                    ^ string.quoted.double.cnf punctuation.definition.string.end.cnf
+
+escapes: "\\ \x7f \u00e9 \u{1F600} \u{10FFFF} \b\f\r\t"
+#         ^^ constant.character.escape.cnf
+#            ^^^^ constant.character.escape.cnf
+#                 ^^^^^^ constant.character.escape.cnf
+#                        ^^^^^^^^^ constant.character.escape.cnf
+#                                  ^^^^^^^^^^ constant.character.escape.cnf
+#                                             ^^^^^^^^ constant.character.escape.cnf
+
+single: 'a # b\n' # comment
+#       ^ string.quoted.single.cnf punctuation.definition.string.begin.cnf
+#        ^^^^^^^ string.quoted.single.cnf - constant.character.escape.cnf
+#               ^ string.quoted.single.cnf punctuation.definition.string.end.cnf
+#                 ^^^^^^^^^ comment.line.number-sign.cnf
+
+empty: ["", '', """""", '''''']
+#       ^^ string.quoted.double.cnf
+#           ^^ string.quoted.single.cnf
+#               ^^^^^^ string.quoted.triple.double.cnf
+#                       ^^^^^^ string.quoted.triple.single.cnf
+
+fence.double: """say "hi"\n""" # comment
+#             ^^^ string.quoted.triple.double.cnf punctuation.definition.string.begin.cnf
+#                ^^^^^^^^ string.quoted.triple.double.cnf
+#                        ^^ string.quoted.triple.double.cnf constant.character.escape.cnf
+#                          ^^^ string.quoted.triple.double.cnf punctuation.definition.string.end.cnf
+#                              ^^^^^^^^^ comment.line.number-sign.cnf
+
+fence.single: '''it's\n'''
+#             ^^^ string.quoted.triple.single.cnf punctuation.definition.string.begin.cnf
+#                ^^^^^^ string.quoted.triple.single.cnf - constant.character.escape.cnf
+#                      ^^^ string.quoted.triple.single.cnf punctuation.definition.string.end.cnf
+
+block.double:
+    """
+#   ^^^ string.quoted.triple.double.block.cnf punctuation.definition.string.begin.cnf
+    #!/bin/sh
+#   ^^^^^^^^^ string.quoted.triple.double.block.cnf - comment
+    key: 1\n and \
+#   ^^^^^^ string.quoted.triple.double.block.cnf - support.type.property-name.cnf
+#         ^^ constant.character.escape.cnf
+#                ^ constant.character.escape.newline.cnf
+    ---
+#   ^^^ string.quoted.triple.double.block.cnf - punctuation.definition.list.fence.cnf
+        """
+#       ^^^ string.quoted.triple.double.block.cnf - punctuation.definition.string.end.cnf
+    '''
+#   ^^^ string.quoted.triple.double.block.cnf
+    """
+#   ^^^ string.quoted.triple.double.block.cnf punctuation.definition.string.end.cnf
+after: 1
+# <----- support.type.property-name.cnf
+
+block.single:
+    '''
+#   ^^^ string.quoted.triple.single.block.cnf punctuation.definition.string.begin.cnf
+    line 1\n \
+#   ^^^^^^^^^^ string.quoted.triple.single.block.cnf - constant.character.escape.cnf
+    """
+#   ^^^ string.quoted.triple.single.block.cnf
+    '''
+#   ^^^ string.quoted.triple.single.block.cnf punctuation.definition.string.end.cnf
+after: 2
+# <----- support.type.property-name.cnf
+
+invalid:
+    escape: "\q \u12 \ud800 \u{110000} \u{d800}"
+#            ^^ invalid.illegal.unknown-escape.cnf
+#               ^^ invalid.illegal.unknown-escape.cnf
+#                    ^^^^^^ invalid.illegal.unknown-escape.cnf
+#                           ^^^^^^^^^^ invalid.illegal.unknown-escape.cnf
+#                                      ^^^^^^^^ invalid.illegal.unknown-escape.cnf
+    unclosed: "abc
+#             ^^^^ string.quoted.double.cnf
+    next: 1
+#   ^^^^ support.type.property-name.cnf - string

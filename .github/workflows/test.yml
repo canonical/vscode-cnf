@@ -1,0 +1,26 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: canonical/launch-workshop@b9e184e38f49808ced78e25de19483fe02484c46 # v1.0.1
+        with:
+          workshop: ext
+          cache: |
+            node:npm-cache
+      - run: workshop exec -- npm ci
+      - run: workshop run -- test-ci
